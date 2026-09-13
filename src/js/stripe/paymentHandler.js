@@ -69,21 +69,27 @@ class PaymentHandler {
         }
       );
 
-      // Step 3: Handle different payment statuses
+      // Step 3: Handle different payment statuses.
+      // 'succeeded' — funds captured immediately.
+      // 'requires_capture' — authorization succeeded, capture deferred to the
+      // server after the trial period; payment is valid, not a failure.
+      const successStatuses = ['succeeded', 'requires_capture'];
+
       if (paymentResult.status === 'requires_action') {
         // 3D Secure or other authentication required
         const authResult = await this.stripeClient.handle3DSecure(
           paymentIntentData.clientSecret
         );
 
-        if (authResult.status !== 'succeeded') {
+        if (!successStatuses.includes(authResult.status)) {
           throw new Error('Payment authentication failed');
         }
-      } else if (paymentResult.status !== 'succeeded') {
+      } else if (!successStatuses.includes(paymentResult.status)) {
         throw new Error(`Payment failed with status: ${paymentResult.status}`);
       }
 
-      // Step 4: Complete signup in database
+      // Step 4: Complete signup in database (must run even when capture is
+      // deferred, so the customer signup is not lost)
       const signupResult = await this.stripeClient.completeSignup(
         email,
         plan,
@@ -95,6 +101,7 @@ class PaymentHandler {
         onSuccess({
           ...signupResult,
           paymentIntentId: paymentIntentData.id,
+          deferredCapture: paymentResult.status === 'requires_capture',
         });
       }
     } catch (error) {

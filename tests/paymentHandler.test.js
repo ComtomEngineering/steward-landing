@@ -219,6 +219,69 @@ describe("PaymentHandler", () => {
       expect(onError).toHaveBeenCalled();
     });
 
+    it("should treat requires_capture as success (deferred trial capture)", async () => {
+      stripeClient.createPaymentIntent.mockResolvedValueOnce({
+        clientSecret: "pi_test_secret_123",
+        id: "pi_test_123",
+      });
+
+      stripeClient.confirmCardPayment.mockResolvedValueOnce({
+        status: "requires_capture",
+      });
+
+      stripeClient.completeSignup.mockResolvedValueOnce({
+        success: true,
+        email: "test@example.com",
+      });
+
+      const onSuccess = jest.fn();
+      const onError = jest.fn();
+
+      await paymentHandler.startCheckout({
+        email: "test@example.com",
+        plan: "weekly",
+        billingPeriod: "monthly",
+        onSuccess,
+        onError,
+      });
+
+      expect(onError).not.toHaveBeenCalled();
+      expect(onSuccess).toHaveBeenCalledWith(
+        expect.objectContaining({
+          paymentIntentId: "pi_test_123",
+          deferredCapture: true,
+        }),
+      );
+    });
+
+    it("should complete signup even when capture is deferred", async () => {
+      stripeClient.createPaymentIntent.mockResolvedValueOnce({
+        clientSecret: "pi_test_secret_123",
+        id: "pi_test_123",
+      });
+
+      stripeClient.confirmCardPayment.mockResolvedValueOnce({
+        status: "requires_capture",
+      });
+
+      stripeClient.completeSignup.mockResolvedValueOnce({
+        success: true,
+      });
+
+      await paymentHandler.startCheckout({
+        email: "test@example.com",
+        plan: "daily",
+        billingPeriod: "yearly",
+      });
+
+      expect(stripeClient.completeSignup).toHaveBeenCalledWith(
+        "test@example.com",
+        "daily",
+        "yearly",
+        "pi_test_123",
+      );
+    });
+
     it("should use default billing period", async () => {
       stripeClient.createPaymentIntent.mockResolvedValueOnce({
         clientSecret: "pi_test_secret_123",
