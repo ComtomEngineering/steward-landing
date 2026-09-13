@@ -17,7 +17,7 @@ describe("PaymentHandler", () => {
           name: "Weekly Digest",
           prices: {
             monthly: 4.99,
-            yearly: 49.9,
+            yearly: 49.99,
           },
           priceIds: {
             monthly: "price_weekly_monthly",
@@ -28,7 +28,7 @@ describe("PaymentHandler", () => {
           name: "Daily Briefing",
           prices: {
             monthly: 7.99,
-            yearly: 79.9,
+            yearly: 79.99,
           },
           priceIds: {
             monthly: "price_daily_monthly",
@@ -41,8 +41,8 @@ describe("PaymentHandler", () => {
       ),
       getPrice: jest.fn((plan, period) => {
         const prices = {
-          weekly: { monthly: 499, yearly: 4990 },
-          daily: { monthly: 799, yearly: 7990 },
+          weekly: { monthly: 499, yearly: 4999 },
+          daily: { monthly: 799, yearly: 7999 },
         };
         return prices[plan][period];
       }),
@@ -436,7 +436,7 @@ describe("PaymentHandler", () => {
 
     it("should format price correctly", () => {
       const info = paymentHandler.getPricingInfo("daily", "yearly");
-      expect(info.amountFormatted).toBe("$79.90");
+      expect(info.amountFormatted).toBe("$79.99");
     });
   });
 
@@ -455,7 +455,7 @@ describe("PaymentHandler", () => {
       const products = paymentHandler.getProductsInfo();
 
       expect(products.weekly.pricing.monthly).toBe("$4.99");
-      expect(products.daily.pricing.yearly).toBe("$79.90");
+      expect(products.daily.pricing.yearly).toBe("$79.99");
     });
   });
 

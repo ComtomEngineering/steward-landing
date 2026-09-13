@@ -27,7 +27,7 @@ class StripeClient {
         },
         prices: {
           monthly: 4.99,
-          yearly: 49.9,
+          yearly: 49.99,
         },
         description:
           "Perfect for staying current with a weekly roundup of the most important AI developments.",
@@ -40,7 +40,7 @@ class StripeClient {
         },
         prices: {
           monthly: 7.99,
-          yearly: 79.9,
+          yearly: 79.99,
         },
         description:
           "Stay ahead with daily AI news curated specifically for your interests and schedule.",

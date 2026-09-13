@@ -49,8 +49,8 @@ const StripeConfig = {
           intervalCount: 1,
         },
         yearly: {
-          amount: 49.9,
-          amountCents: 4990,
+          amount: 49.99,
+          amountCents: 4999,
           priceId: "price_weekly_yearly",
           interval: "year",
           intervalCount: 1,
@@ -81,8 +81,8 @@ const StripeConfig = {
           intervalCount: 1,
         },
         yearly: {
-          amount: 79.9,
-          amountCents: 7990,
+          amount: 79.99,
+          amountCents: 7999,
           priceId: "price_daily_yearly",
           interval: "year",
           intervalCount: 1,

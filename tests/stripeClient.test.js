@@ -50,12 +50,12 @@ describe("StripeClient", () => {
 
     it("should have correct pricing for weekly plan", () => {
       expect(stripeClient.products.weekly.prices.monthly).toBe(4.99);
-      expect(stripeClient.products.weekly.prices.yearly).toBe(49.9);
+      expect(stripeClient.products.weekly.prices.yearly).toBe(49.99);
     });
 
     it("should have correct pricing for daily plan", () => {
       expect(stripeClient.products.daily.prices.monthly).toBe(7.99);
-      expect(stripeClient.products.daily.prices.yearly).toBe(79.9);
+      expect(stripeClient.products.daily.prices.yearly).toBe(79.99);
     });
   });
 
@@ -85,7 +85,7 @@ describe("StripeClient", () => {
 
     it("should get price in cents for daily yearly plan", () => {
       const price = stripeClient.getPrice("daily", "yearly");
-      expect(price).toBe(7990); // $79.90 in cents
+      expect(price).toBe(7999); // $79.99 in cents
     });
 
     it("should throw error for unknown plan", () => {
